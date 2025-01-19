@@ -12,7 +12,7 @@ from selenium.common.exceptions import TimeoutException
 
 
 # globale Chrome Settings und Variablen
-service=Service(r"C:\tools\chromedriver.exe")
+service=Service("./chromedriver.exe")
 options = webdriver.ChromeOptions()
 options.add_argument("--log-level=1")
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -88,7 +88,7 @@ def getURLsInfo(driver, weekURLs):
                 )
                 stundeninfos[property] = result.text
             except:
-                stundeninfos[property] = "Error - Exception beim Lesen des bElements."
+                stundeninfos[property] = "leer"
                 print(f"Error - Exception beim Lesen des Elements {property} mit dem XPath {xpath}.")
             info.append(stundeninfos)
             print(stundeninfos)
@@ -96,8 +96,8 @@ def getURLsInfo(driver, weekURLs):
 
 
 
-print("Automatische Authentifizierung erfordert, dass du deine Logindaten unverschlüsselt in der Datei 'credentials.txt' speicherst.")
-print("Da es dir suspekt sein sollte fremden Code mit deinen Logindaten zu füttern, kannst du dich auch selbst anmelden und den Rest dem Skript überlassen. (Es wäre einem böswilligen Hacker aber immernoch möglich so an deine Daten zu gelangen.)")
+print("Automatische Authentifizierung erfordert, dass du deine Logindaten unverschlüsselt in der Datei 'credentials.txt' speicherst. Zeile 1: Benutzername, Zeile 2: Passwort.")
+print("Da es dir bestenfalls suspekt vorkommen sollte fremden Code mit deinen Logindaten zu füttern, kannst du dich auch selbst anmelden und den Rest dem Skript überlassen. (Es wäre aber selbst dann immernoch möglich, so an deine Daten zu kommen.)")
 #method = input("Möchtest du dich automatisch oder manuell anmelden? [a/m] ")
 driver = webdriver.Chrome(service=service, options=options)
 

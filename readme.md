@@ -1,6 +1,6 @@
 # Disclaimer
 Bisher nur in Windows 10 mit Python-3.12 getestet.
-Feedback auf anderen Plattformen willkommen.
+Feedback ob das Skript auf anderen Plattformen funktioniert, ist willkommen - Das sollte aber vor allem von Selenium abhängen.
 
 # Installation
 ## Windows
@@ -15,4 +15,8 @@ Feedback auf anderen Plattformen willkommen.
 3. Python-Abhängigkeiten installieren
     - Über ```pip install -r requirements.txt``` installierst du automatisch Selenium und alle andere Abhängigkeiten des Skripts.
 
-
+4. Chromeengine installieren
+    - Man muss jetzt noch irgendwie einen Webdriver installieren und in Selenium einbinden
+    - Da ich im Code explizit den Chromedriver angesprochen habe, müsst ihr diesen ebenfalls verwenden.
+    - Downloads für den Chrome-Webdriver, bzw. "chromedriver" gibt es [hier](https://googlechromelabs.github.io/chrome-for-testing/).
+    - Glaube dann müsst ihr in "fetckkkhentries.py" halt einmal 
