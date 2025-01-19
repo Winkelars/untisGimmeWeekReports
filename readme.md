@@ -19,4 +19,4 @@ Feedback ob das Skript auf anderen Plattformen funktioniert, ist willkommen - Da
     - Man muss jetzt noch irgendwie einen Webdriver installieren und in Selenium einbinden
     - Da ich im Code explizit den Chromedriver angesprochen habe, müsst ihr diesen ebenfalls verwenden.
     - Downloads für den Chrome-Webdriver, bzw. "chromedriver" gibt es [hier](https://googlechromelabs.github.io/chrome-for-testing/).
-    - Glaube dann müsst ihr in "fetckkkhentries.py" halt einmal 
+    - legt chromedriver.exe mit in das Repoverzeichnis neben diese "readme.md" und "fetchentries.py".
