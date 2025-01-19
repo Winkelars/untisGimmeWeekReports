@@ -115,7 +115,7 @@ def getURLsInfo(driver, weekURLs):
 
 
 print("Automatische Authentifizierung erfordert, dass du deine Logindaten unverschlüsselt in der Datei 'credentials.txt' speicherst. Zeile 1: Benutzername, Zeile 2: Passwort.")
-#method = input("Möchtest du dich automatisch oder manuell anmelden? [a/m] ")
+method = input("Möchtest du dich automatisch oder manuell anmelden? [a/m] ")
 driver = webdriver.Chrome(service=service, options=options)
 
 # Entfernen, wenn fertig
