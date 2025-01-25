@@ -118,10 +118,6 @@ print("Automatische Authentifizierung erfordert, dass du deine Logindaten unvers
 method = input("Möchtest du dich automatisch oder manuell anmelden? [a/m] ")
 driver = webdriver.Chrome(service=service, options=options)
 
-# Entfernen, wenn fertig
-method = "a"
-
-
 if method.lower() == "m":
     session = authManual(driver)
 elif method.lower() == "a":
@@ -131,7 +127,8 @@ else:
     driver.quit()
     exit()
 
-# Authentifizierung abgeschlossen. Ab jetzt mit Session arbeiten
+# Authentifizierung theoretisch ab hier erledigt.
+# Jetzt Prompt für Datumsintervall und dann Zugriff auf die verschiedenen DOM-Trees
 
 print("Folgende Abfragen bitte fehlerfrei eingeben. Ich hab kein Error-Handling eingebaut, dafür bezahlt man mich nicht gut genug (gar nicht).")
 startdate = input("Gib im Format YYYY-MM-DD an, ab wann du die Stundenplaninfos fetchen willst: ")
@@ -166,7 +163,7 @@ print(f"[LOG] Fahre fort und nutze URLs um Informationen abzurufen.")
 data = getURLsInfo(session, allUrls)
 session.quit()
 
-print(f"[LOG] Erstelle mit 'Pandas'-Biliothek Excel-Datei aus Datensatz.")
+print(f"[LOG] Erstelle mit 'Pandas'-Biliothek eine Excel-Datei aus dem Datensatz...")
 df = pd.DataFrame(data)
 filename = f"Untisdaten {interval}.xlsx"
 df.to_excel(filename, index=False)
