@@ -1,5 +1,4 @@
 import pandas as pd
-import time
 from datetime import datetime, timedelta
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -9,21 +8,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
-
-
-# globale Chrome Settings und Variablen
-service=Service("./chromedriver.exe")
+# Global Chrome Settings and Variables
+service = Service("./chromedriver.exe")
 options = webdriver.ChromeOptions()
 options.add_argument("--log-level=1")
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-untilTimeout = 5
-
 
 def authManual(driver):
     print("Starte manuelle Authentifizierung...")
-    url = "https://borys.webuntis.com/WebUntis/?school=RBZ+Eckener+Schule+Flensburg#/basic/login"
+    school = input("Gib den Namen deiner Schule so ein, wie er in der Untis-URL beim Login angezeigt wird. (Enter für: 'RBZ+Eckener+Schule+Flensburg'): ")
+    if school == "":
+        school = "RBZ+Eckener+Schule+Flensburg"
+    url = f"https://borys.webuntis.com/WebUntis/?school={school}#/basic/login"
     driver.get(url)
-    input("Drücke [beliebig], sobald du angemeldet bist und das Skript fortfahren darf.")
+    input("Drücke einfach [beliebig], sobald du dich angemeldet hast und die Seite vollständig geladen ist.")
     return driver
 
 def authAuto(driver):
@@ -31,7 +29,9 @@ def authAuto(driver):
         lines = f.readlines()
         username = lines[0].strip()
         password = lines[1].strip()
-    school = "RBZ+Eckener+Schule+Flensburg"
+    school = input("Gib den Namen deiner Schule so ein, wie er in der Untis-URL beim Login angezeigt wird. (Enter für: 'RBZ+Eckener+Schule+Flensburg'): ")
+    if school == "":
+        school = "RBZ+Eckener+Schule+Flensburg"
     url = f"https://borys.webuntis.com/WebUntis/?school={school}#/basic/login"
     driver.get(url)
     inputs = WebDriverWait(driver, untilTimeout).until(
@@ -40,17 +40,14 @@ def authAuto(driver):
     inputs[1].send_keys(password)
     inputs[1].send_keys(Keys.RETURN)
     print("Über credentials.txt authentifiziert.")
-    input("Drücke [beliebig], sobald du angemeldet bist und das Skript fortfahren darf.")
     return driver
 
-def getWeekURLs(driver, date):
+def getTableURLs(driver, date):
     driver.get(f"https://borys.webuntis.com/timetable-students-my/{date}")
     iframe = WebDriverWait(driver, untilTimeout).until(
         EC.presence_of_element_located((By.ID, "embedded-webuntis"))
     )
-    #print("[LOG] iframe erkannt")
     driver.switch_to.frame(iframe)
-    #print("[LOG] zu iframe gewechselt")
     WebDriverWait(driver, untilTimeout).until(
         EC.presence_of_element_located((By.CLASS_NAME, "timetableContent"))
     )
@@ -65,10 +62,8 @@ def getWeekURLs(driver, date):
     print(f"[LOG] Für die Woche mit Datum '{date}' wurden {len(weekURLs)} Unterrichtsstunden erkannt.")
     return weekURLs
 
-
-
-def getURLsInfo(driver, weekURLs):
-    xpaths= {
+def fetchData(driver, weekURLs):
+    xpaths = {
         "Inhalt": '//*[@id="root"]/div/div/div/div[2]/div/div[1]/section/div[2]/div/div/div/div[2]/div/div/div/div[2]/div/div/div[1]/div/div/div[2]/textarea',
         "Fachbezeichnung": '//*[@id="root"]/div/div/div/div[2]/div/div[1]/section/div[2]/div/div/div/div[2]/div/div/div/div[1]/div[1]/div/div/div/div[1]/div/div/div[2]/div/span',
         "Raumangabe": '//*[@id="root"]/div/div/div/div[2]/div/div[1]/section/div[2]/div/div/div/div[2]/div/div/div/div[1]/div[1]/div/div/div/div[2]/div/div[4]/div/span',
@@ -78,7 +73,7 @@ def getURLsInfo(driver, weekURLs):
     checkXPath = '//*[@id="root"]/div/div/div/div[2]/div/div[1]/section/div[2]/div/div/div/div[2]/div/div/div/div[2]/div/div/div[1]/div'
     l = len(weekURLs)
     print(f"Es werden {l} Seiten für die Woche abgerufen.")
-    info = []
+    data = []
     for x, url in enumerate(weekURLs, start=1):
         stundeninfos = {}
         print(f"Rufe Url {x} von {l} ab.")
@@ -108,23 +103,27 @@ def getURLsInfo(driver, weekURLs):
                 except:
                     stundeninfos[property] = "leer"
                     print(f"[Error] - Vermutlich Timeout beim Suchen von '{xpath}' im DOM-Tree.")
-            info.append(stundeninfos)
-            print(stundeninfos)
-    return info
+            data.append(stundeninfos)
+        print(f"[LOG] Gelesene Daten - ", end="")
+        for stundeninfo in stundeninfos.values():
+            print(f" ::{stundeninfo}:: ", end="")
+        print("\n")
+    return data
 
-
-
+untilTimeout = input("Wie lange soll auf Elemente im DOM gewartet werden? (Enter für 5 Sekunden) ")
+if untilTimeout == "":
+    untilTimeout = 5
 print("Automatische Authentifizierung erfordert, dass du deine Logindaten unverschlüsselt in der Datei 'credentials.txt' speicherst. Zeile 1: Benutzername, Zeile 2: Passwort.")
 method = input("Möchtest du dich automatisch oder manuell anmelden? [a/m] ")
-driver = webdriver.Chrome(service=service, options=options)
 
 if method.lower() == "m":
+    driver = webdriver.Chrome(service=service, options=options)
     session = authManual(driver)
 elif method.lower() == "a":
+    driver = webdriver.Chrome(service=service, options=options)
     session = authAuto(driver)
 else:
     print("Ungültige Eingabe.")
-    driver.quit()
     exit()
 
 # Authentifizierung theoretisch ab hier erledigt.
@@ -151,16 +150,13 @@ while sdo < edo:
     datelist.append(sdo.strftime("%Y-%m-%d"))
     sdo = sdo + timedelta(days=7)
 
-
 allUrls = []
-for date in datelist:
-    urls = getWeekURLs(session, date)
+for weekDate in datelist:
+    urls = getTableURLs(session, weekDate)
     allUrls.extend(urls)
-print(allUrls)
-print(f"[LOG] im Intervall' {interval}' wurden {len(allUrls)} Unterrichtsstunden erkannt und ihre URLs wurden gesammelt.")
-print(f"[LOG] Fahre fort und nutze URLs um Informationen abzurufen.")
-
-data = getURLsInfo(session, allUrls)
+print(f"[LOG] {len(allUrls)} URLs wurden gefetcht.")
+print(f"[LOG] Fahre fort und fetche Daten anhand der URLs.")
+data = fetchData(session, allUrls)
 session.quit()
 
 print(f"[LOG] Erstelle mit 'Pandas'-Biliothek eine Excel-Datei aus dem Datensatz...")
