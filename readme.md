@@ -1,6 +1,7 @@
 # Disclaimer
-Bisher nur in Windows 10 mit Python-3.12 getestet.
+Bisher nur in Windows 10 mit Python-3.12 und in WSL auf Ubuntu getestet.
 Feedback, ob das Skript auf anderen Plattformen funktioniert, ist willkommen.
+Bei Linux muss der Pfad zu "chromedriver.exe" zu "chromedriver" im Skript umbenannt werden - Oder man benennt chromedriver zu chromedriver.exe um.
 Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Python-Bibliothek "Selenium" auftreten.
 
 # Installation
