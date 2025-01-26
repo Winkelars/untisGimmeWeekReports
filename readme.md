@@ -17,11 +17,16 @@ Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Py
     - Wenn du Python öfter benutzt möchtest du als erstes wahrscheinlich eine virtuelle Umgebung aufsetzen - also z.B. via ```python -m venv venv``` die Umgebung anlegen und danach über ```./venv/Scripts/Activate.ps1``` die Umgebung betreten. Dann sollte "(venv)" in deinem PowerShell-Prompt zu sehen sein.
     - Über ```pip install -r requirements.txt``` installierst du automatisch Selenium und alle anderen Python-Abhängigkeiten des Skripts.
 
-4. Chromeengine installieren
+4. Webdriver installieren
     - Man muss jetzt noch einen Webdriver installieren und in Selenium einbinden
-    - Da ich im Code explizit den Chromedriver angesprochen habe, müsst ihr entweder ebenfalls chromedriver.exe verwenden, oder den Code anpassen, was auch nicht allzu schwierig wäre.
+    - Da ich hardcoded den Chromedriver angesprochen habe, müsst ihr entweder ebenfalls chromedriver.exe verwenden, oder den Code anpassen, was auch nicht allzu schwierig wäre.
     - Downloads für den Chrome-Webdriver, bzw. "chromedriver" gibt es [hier](https://googlechromelabs.github.io/chrome-for-testing/).
     - legt "chromedriver.exe" entpackt mit in das Repoverzeichnis neben "readme.md" und "fetchentries.py".
+
+5. Webbrowser installieren
+    - Wenn ihr chromedriver von der hinterlegten Website heruntergeladen habt, müsst ihr die zugehörige Chrome-Version installieren.
+    - Da Chrome sich i.d.R. in Windows auto-updated, habt ihr eventuell Glück und müsst nichts tun, solange ihr den neusten chromedriver ausgewählt hattet.
+    - Ansonsten installiert ihr den Browser mit der entsprechenden Versionsnummer des zuvor installierten Drivers.
 
 ### Anmerkung
 Teile der Installation könnten in Zukunft automatisiert oder überflüssig gemacht werden. Wenn ich herausfände wie man alles über ein kleines Dockerimage laufen lässt, würde man nur Docker installieren und dann einmal das Image ausführen müssen.
