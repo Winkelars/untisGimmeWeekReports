@@ -4,6 +4,11 @@ Feedback, ob das Skript auf anderen Plattformen funktioniert, ist willkommen.
 Bei Linux muss der Pfad von "chromedriver.exe" zu "chromedriver" im Skript umbenannt werden - Oder man benennt chromedriver zu chromedriver.exe um. - Ich weiß, das könnte man easy beheben. Ich bin bisher nur zu faul gewesen.
 Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Python-Bibliothek "Selenium" auftreten.
 
+# Vorschau
+![image](https://pixeldrain.com/u/iTvN5jDS)
+![image](https://pixeldrain.com/u/K5M6sRK2)
+
+
 # Installation
 ## Windows
 1. allgemeine Abhängigkeiten installieren 
