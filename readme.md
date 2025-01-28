@@ -6,7 +6,7 @@ Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Py
 
 # Vorschau
 ![image](https://pixeldrain.com/api/file/iTvN5jDS)
-![image](https://pixeldrain.com/api/file/K5M6sRK2) 
+[video preview](https://pixeldrain.com/api/file/i3CatESg) 
 
 
 # Installation
