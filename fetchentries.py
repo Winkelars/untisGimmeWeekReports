@@ -1,18 +1,21 @@
 import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime, timedelta
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
-# Global Chrome Settings and Variables
-service = Service("./chromedriver.exe")
-options = webdriver.ChromeOptions()
-options.add_argument("--log-level=1")
-options.add_experimental_option('excludeSwitches', ['enable-logging'])
+def initDriver():
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    options = webdriver.ChromeOptions()
+    options.add_argument("--log-level=1")
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    return driver
+
 
 def authManual(driver):
     print("Starte manuelle Authentifizierung...")
@@ -117,10 +120,10 @@ print("Automatische Authentifizierung erfordert, dass du deine Logindaten unvers
 method = input("Möchtest du dich automatisch oder manuell anmelden? [a/m] ")
 
 if method.lower() == "m":
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = initDriver()
     session = authManual(driver)
 elif method.lower() == "a":
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = initDriver()
     session = authAuto(driver)
 else:
     print("Ungültige Eingabe.")
