@@ -25,7 +25,6 @@ def main():
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         return driver
 
-
     def authManual(driver):
         print("Starte manuelle Authentifizierung...")
         url = f"https://borys.webuntis.com/WebUntis/?school={school}#/basic/login"
@@ -111,9 +110,9 @@ def main():
                         stundeninfos[property] = "leer"
                         print(f"[Error] - Vermutlich Timeout beim Suchen von '{xpath}' im DOM-Tree")
             data.append(stundeninfos)
-            print(f"[LOG] Daten:", end="")
+            print(f"[LOG] Daten: ", end="")
             for stundeninfo in stundeninfos.values():
-                print(repr(f" ::{stundeninfo}:: ", end=""))
+                print(repr(f" ::{stundeninfo}:: "), end="")
             print("\n")
         return data
 
@@ -168,8 +167,23 @@ def main():
     data = fetchData(session, allUrls)
     session.quit()
 
-    print(f"[LOG] Erstelle mit 'Pandas'-Biliothek eine Excel-Datei aus dem Datensatz...")
+    def format_time_column(uhrzeit: str, datum: str):
+        start_time, end_time = uhrzeit.split('-')
+        normalisiertes_datum = datetime.strptime(datum, "%d.%m.%Y").strftime("%d-%m-%Y")
+        anfang = f"{normalisiertes_datum} {start_time}"
+        ende = f"{normalisiertes_datum} {end_time}"
+        return anfang, ende
+
+    # DataFrame erstellen
     df = pd.DataFrame(data)
+
+    print(f"[LOG] Erstelle mit 'Pandas'-Bibliothek eine Excel-Datei aus dem Datensatz...")
+    # Neue Spalten hinzufk
+    # Neue Spalten hinzufügen, indem die Funktion auf jede Zeile angewendet wird
+    df["Anfang"], df["Ende"] = zip(*df.apply(lambda row: format_time_column(row["Uhrzeit"], row["Datum"]), axis=1))
+    df.drop(columns=["Uhrzeit", "Datum"], inplace=True)
+
+    
     filename = f"Untisdaten {interval}.xlsx"
     df.to_excel(filename, index=False)
     print(f"[LOG] Excel-Datei '{filename}' wurde erstellt.")
