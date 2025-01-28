@@ -1,4 +1,7 @@
 venv/
+build/
+dist/
 credentials.txt
 chromedriver.exe
 *.xlsx
+*.spec

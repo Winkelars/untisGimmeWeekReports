@@ -27,3 +27,8 @@ Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Py
 
 ### Anmerkung
 Teile der Installation werden in Zukunft hoffentlich automatisiert oder überflüssig gemacht. Wenn ich herausfinde wie man alles über ein kleines Dockerimage laufen lässt, muss man bald nur Docker installieren und das Image via ```docker run image``` ausführen
+
+# Build
+Um eine .exe für Windows zu bauen können folgende Schritte befolgt werden:
+- ```pip install build_requirements.txt```
+- ```pyinstaller --onefile --name untisGimmeWeekReports main.py```
