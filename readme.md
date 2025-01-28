@@ -5,8 +5,8 @@ Bei Linux muss der Pfad von "chromedriver.exe" zu "chromedriver" im Skript umben
 Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Python-Bibliothek "Selenium" auftreten.
 
 # Vorschau
-![image](https://pixeldrain.com/api/file/iTvN5jDS)
-[video preview](https://pixeldrain.com/api/file/i3CatESg) 
+- ![image](https://pixeldrain.com/api/file/iTvN5jDS)
+- [video preview](https://pixeldrain.com/api/file/i3CatESg) 
 
 
 # Installation
