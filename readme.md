@@ -30,5 +30,5 @@ Teile der Installation werden in Zukunft hoffentlich automatisiert oder überfl�
 
 # Build
 Um eine .exe für Windows zu bauen können folgende Schritte befolgt werden:
-- ```pip install build_requirements.txt```
+- ```pip install -r build_requirements.txt```
 - ```pyinstaller --onefile --name untisGimmeWeekReports main.py```
