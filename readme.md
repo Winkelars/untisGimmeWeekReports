@@ -6,28 +6,27 @@ Kompatibilitätsprobleme werden am wahrscheinlichsten im Zusammenhang mit der Py
 
 # Installation
 ## Windows
-1. allgemeine Abhängigkeiten installieren
-    - Wenn du noch nie von Git gehört hast, ist das ok, aber  
-    - Über das PowerShell-Modul "WinGet" kann Git kann ganz einfach mit dem Befehl ```winget install Git.Git``` installiert werden - Bei den neusten Windows 11 Releases ist Winget eingentlich vorinstalliert. Ansonsten Google -> "Windows git installation"
-    - Außerdem muss Python installiert werden. Dafür empfehle ich die neuste Version von der [offiziellen Website](https://www.python.org/downloads/) herunterzuladen und den Installationsanweisungen zu folgen.
+1. allgemeine Abhängigkeiten installieren 
+    - Git: Über das PowerShell-Modul "WinGet" kann man als Windowsuser den Befehl ```winget install Git.Git``` benutzen um den Installationsvorgang für Git zu starten - Bei den neusten Windows 11 Releases ist Winget eingentlich vorinstalliert. Alternativ Git wie jedes andere Programm googlen und installieren -> "Windows git installation"
+    - Python: Dafür empfehle ich die [offizielle Website](https://www.python.org/downloads/) zu besuchen den Installationsanweisungen zu folgen. Über Winget ist die Installation aber ziemlich sicher auch möglich.
 
-2. Repo klonen
-    - Mit dem Befehl ```git clone https://github.com/Winkelars/untisGimmeWeekReports {pfad}``` kopierst du das Projekt in das Verzeichnis, das du im Feld {pfad} auswählst. 
+3. Repo klonen
+    - Mit dem Befehl ```git clone https://github.com/Winkelars/untisGimmeWeekReports {pfad}``` kopierst du das Projekt in das Verzeichnis, das du an der Stelle {pfad} auswählst.
+    - wechsle mit ```cd {pfad}``` jetzt in das Verzeichnis
 
-3. Python-Abhängigkeiten installieren
-    - Wenn du Python öfter benutzt möchtest du als erstes wahrscheinlich eine virtuelle Umgebung aufsetzen - also z.B. via ```python -m venv venv``` die Umgebung anlegen und danach über ```./venv/Scripts/Activate.ps1``` die Umgebung betreten. Dann sollte "(venv)" in deinem PowerShell-Prompt zu sehen sein.
-    - Über ```pip install -r requirements.txt``` installierst du automatisch Selenium und alle anderen Python-Abhängigkeiten des Skripts.
+4. Python-Abhängigkeiten installieren
+    - Wenn du planst Python öfter zu benutzen, und allgemein einfach best-practice folgen willst, solltest du nun eine virtuelle Umgebung aufsetzen - ich empfehle also ```python -m venv venv``` auszuführen und danach über ```./venv/Scripts/Activate.ps1``` die Umgebung zu betreten. Danach sollte "(venv)" in deinem PowerShell-Prompt zu sehen sein.
+    - Über ```pip install -r requirements.txt``` installierst du zuletzt automatisch alle anderen Python-Bibliotheken, die das Skript zu laufen braucht.
 
-4. Webdriver installieren
+5. Webdriver installieren
     - Man muss jetzt noch einen Webdriver installieren und in Selenium einbinden
-    - Da ich hardcoded den Chromedriver angesprochen habe, müsst ihr entweder ebenfalls chromedriver.exe verwenden, oder den Code anpassen, was auch nicht allzu schwierig wäre.
-    - Downloads für den Chrome-Webdriver, bzw. "chromedriver" gibt es [hier](https://googlechromelabs.github.io/chrome-for-testing/).
-    - legt "chromedriver.exe" entpackt mit in das Repoverzeichnis neben "readme.md" und "fetchentries.py".
+    - Da ich hardcoded den Chromedriver angesprochen habe, müsst ihr entweder ebenfalls chromedriver.exe verwenden, oder den Code anpassen, was nicht all zu schwierig wäre. Geckodriver ist der Name des Webdrivers für Firefox.
+    - Downloads für den Chrome-Webdriver, bzw. für "chromedriver" gibt es [hier](https://googlechromelabs.github.io/chrome-for-testing/).
+    - legt "chromedriver.exe" in entpackter Form mit in das Repoverzeichnis neben "readme.md" und "fetchentries.py".
 
-5. Webbrowser installieren
-    - Wenn ihr chromedriver von der hinterlegten Website heruntergeladen habt, müsst ihr die zugehörige Chrome-Version installieren.
-    - Da Chrome sich i.d.R. in Windows auto-updated, habt ihr eventuell Glück und müsst nichts tun, solange ihr den neusten chromedriver ausgewählt hattet.
-    - Ansonsten installiert ihr den Browser mit der entsprechenden Versionsnummer des zuvor installierten Drivers.
+6. Webbrowser installieren
+    - Chromedriver muss mit deiner Chromeversion kompatibel sein - meist heißt das, die wählst bei Schritt 5 die neuste chromedriver-Version und achtest darauf, dass dein Chrome Up To Date ist.
+    - Bei anderem Webdriver installiert ihr den entsprechenden Webbrowser mit der benötigten Version
 
 ### Anmerkung
-Teile der Installation könnten in Zukunft automatisiert oder überflüssig gemacht werden. Wenn ich herausfände wie man alles über ein kleines Dockerimage laufen lässt, würde man nur Docker installieren und dann einmal das Image ausführen müssen.
+Teile der Installation werden in Zukunft hoffentlich automatisiert oder überflüssig gemacht. Wenn ich herausfinde wie man alles über ein kleines Dockerimage laufen lässt, muss man bald nur Docker installieren und das Image via ```docker run image``` ausführen
