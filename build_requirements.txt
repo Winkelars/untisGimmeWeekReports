@@ -1,6 +1,9 @@
 altgraph==0.17.4
+<<<<<<< HEAD
 pefile==2024.8.26
-pyinstaller==6.11.1
+=======
+pyinstaller==6.13.0
+>>>>>>> origin/dependabot/pip/pyinstaller-6.13.0
 pywin32-ctypes==0.2.3
 pyinstaller-hooks-contrib==2025.1
 setuptools==75.8.0
