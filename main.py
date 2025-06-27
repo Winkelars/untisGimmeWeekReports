@@ -1,3 +1,5 @@
+import os
+import time
 import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime, timedelta
@@ -9,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
+# Spaghetticode of doom but it works
+
 # fetchentries.py
 import sys
 
@@ -17,6 +21,16 @@ def main():
         print(f"Argumente: {sys.argv[1:]}")
     else:
         print("Keine Argumente angegeben.")
+    if sys.argv[1] == "test":
+        test = True
+
+    config = {
+        "timeout": 3,
+        "school": "RBZ+Eckener+Schule+Flensburg",
+        "auth": "auto",
+        "start_date": "2024-10-01",
+        "end_date": "2024-10-5"
+    }
 
     def initDriver():
         options = webdriver.ChromeOptions()
@@ -25,14 +39,14 @@ def main():
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         return driver
 
-    def authManual(driver):
+    def authenticate_manually(driver):
         print("Starte manuelle Authentifizierung...")
         url = f"https://borys.webuntis.com/WebUntis/?school={school}#/basic/login"
         driver.get(url)
         input("Drücke einfach [beliebig], sobald du dich angemeldet hast und die Seite vollständig geladen ist.")
         return driver
 
-    def authAuto(driver):
+    def authenticate_automatically(driver):
         with open("./credentials.txt", "r") as f:
             lines = f.readlines()
             username = lines[0].strip()
@@ -48,7 +62,10 @@ def main():
         return driver
 
     def getTableURLs(driver, date):
+        if test: print(f"Funktion getTableURLs wird aufgerufen mit date: {date}")
+        if test: time.sleep(5)
         driver.get(f"https://borys.webuntis.com/timetable-students-my/{date}")
+        if test: print(f"URL 'https://borys.webuntis.com/timetable-students-my/{date}' wurde aufgerufen.")
         iframe = WebDriverWait(driver, untilTimeout).until(
             EC.presence_of_element_located((By.ID, "embedded-webuntis"))
         )
@@ -85,7 +102,7 @@ def main():
             driver.get(url)
             for property, xpath in xpaths.items():
                 if property == "Inhalt":
-                    print(f"[LOG] Lese Inhalt aus")
+                    print(f"[LOG] Lese Unterrichtsthema aus")
                     try:
                         form_element = WebDriverWait(driver, untilTimeout).until(
                             EC.presence_of_element_located((By.XPATH, checkXPath))
@@ -116,47 +133,62 @@ def main():
             print("\n")
         return data
 
-    untilTimeout = input("Wie lange soll auf Elemente im DOM gewartet werden? (Enter für 5 Sekunden) ")
-    if untilTimeout == "":
-        untilTimeout = 5
+    untilTimeout = ""
+    if not test:
+        untilTimeout = input("Wie lange soll auf Elemente im DOM gewartet werden? (Enter für 5 Sekunden) ")
+    if untilTimeout == "" or test:
+        untilTimeout = config["timeout"]
 
-    school = input("Gib bitte den Namen deiner Schule so ein, wie er in der Untis-URL beim Login angezeigt wird. (Enter für: 'RBZ+Eckener+Schule+Flensburg'): ")
-    if school == "":
-        school = "RBZ+Eckener+Schule+Flensburg"
+    school = ""
+    if not test:
+        school = input("Gib bitte den Namen deiner Schule so ein, wie er in der Untis-URL beim Login angezeigt wird. (Enter für: 'RBZ+Eckener+Schule+Flensburg'): ")
+    if school == "" or test:
+        school = config["school"]
 
     print("Automatische Authentifizierung erfordert, dass du deine Logindaten unverschlüsselt in der Datei 'credentials.txt' speicherst. Zeile 1: Benutzername, Zeile 2: Passwort.")
     method = ""
     while(method.lower() != "a" and method.lower() != "m"):
-        method = input("Möchtest du dich automatisch anmelden oder manuell? [a/m] ")
+        if not test: method = input("Möchtest du dich automatisch anmelden oder manuell? [a/m] ")
+        else: method = "a"
         if method.lower() == "m":
             driver = initDriver()
-            session = authManual(driver)
+            session = authenticate_manually(driver)
         elif method.lower() == "a":
             driver = initDriver()
-            session = authAuto(driver)
-
+            session = authenticate_automatically(driver)
     # Authentifizierung theoretisch ab hier erledigt.
     # Jetzt Prompt für Datumsintervall und dann Zugriff auf die verschiedenen DOM-Trees
 
     fortfahren = False
     while(not fortfahren):
         print("Folgende Abfragen bitte fehlerfrei eingeben. Ich hab kein Error-Handling eingebaut, dafür bezahlt man mich nicht gut genug (gar nicht).")
-        startdate = input("Gib im Format YYYY-MM-DD an, ab wann du die Stundenplaninfos fetchen willst: ")
-        enddate = input("Gib im Format YYYY-MM-DD an, bis wann du die Stundenplaninfos fetchen willst ODER 'H' für das heutige Datum: ")
+        if not test: startdate = input("Gib im Format YYYY-MM-DD an, ab wann du die Stundenplaninfos fetchen willst: ")
+        else: startdate = "2024-10-01"
+        if not test: enddate = input("Gib im Format YYYY-MM-DD an, bis wann du die Stundenplaninfos fetchen willst ODER 'H' für das heutige Datum: ")
+        else: enddate = "2024-10-08"
         if enddate.lower() == "h":
             enddate = datetime.now().strftime("%Y-%m-%d")
         interval = f"{startdate} - {enddate}"
-        cont = input(f"Du hast das Intervall {interval} gewählt. Fortfahren? [y/n] ")
+        if not test: cont = input(f"Du hast das Intervall {interval} gewählt. Fortfahren? [y/n] ")
+        else: 
+            print(f"Intervall {interval} gewählt. Fahre fort...")
+            cont = "y"
         if cont.lower() == "y":
             fortfahren = True
+        
 
     sdo = datetime.strptime(startdate, "%Y-%m-%d")
+    if test: print(f"[TEST] startdateobject: {sdo}")
     edo = datetime.strptime(enddate, "%Y-%m-%d")
+    if test: print(f"[TEST] enddateobject: {edo}")
     datelist = []
 
     while sdo < edo:
+        if test: print(f"sdo wird datelist appended weil sdo < edo. erhöhe sdo um 7 Tage.")
         datelist.append(sdo.strftime("%Y-%m-%d"))
+        if test: print(sdo)
         sdo = sdo + timedelta(days=7)
+        if test: print(sdo)
 
     allUrls = []
     for weekDate in datelist:
@@ -174,19 +206,31 @@ def main():
         ende = f"{normalisiertes_datum} {end_time}"
         return anfang, ende
 
+    if(len(data) == 0):
+        print("[LOG] - Es wurden in diesem Zeitraum keine Daten gefunden. Überspringe Erstellung der Excel-Datei.")
+        return
+
     # DataFrame erstellen
     df = pd.DataFrame(data)
-
     print(f"[LOG] Erstelle mit 'Pandas'-Bibliothek eine Excel-Datei aus dem Datensatz...")
-    # Neue Spalten hinzufk
     # Neue Spalten hinzufügen, indem die Funktion auf jede Zeile angewendet wird
     df["Anfang"], df["Ende"] = zip(*df.apply(lambda row: format_time_column(row["Uhrzeit"], row["Datum"]), axis=1))
     df.drop(columns=["Uhrzeit", "Datum"], inplace=True)
 
-    
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(df)
+
     filename = f"Untisdaten {interval}.xlsx"
+    if test:
+        rising_integer = 1
+        while True:
+            filename = f"Test {rising_integer}.xlsx"
+            if not os.path.exists(filename):
+                break
+            rising_integer += 1
     df.to_excel(filename, index=False)
     print(f"[LOG] Excel-Datei '{filename}' wurde erstellt.")
+
 
 
 if __name__ == "__main__":
